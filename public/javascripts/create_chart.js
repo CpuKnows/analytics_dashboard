@@ -1,26 +1,3 @@
-var platformFreqData = [
-    {platform: 'PC', freq: 1234},
-    {platform: 'Android', freq: 234},
-    {platform: 'iPhone', freq: 345}
-];
-
-var idFreqData = [
-    {id: 'Alice', freq: 123},
-    {id: 'Bob', freq: 234},
-    {id: 'Carol', freq: 345},
-    {id: 'John', freq: 321},
-    {id: 'Jane', freq: 432}
-];
-
-var actionFreqData = [
-    {action: 'click', freq: 321},
-    {action: 'pause', freq: 432},
-    {action: 'play', freq: 543},
-    {action: 'stop', freq: 123},
-    {action: 'watched 75%', freq: 234}
-];
-
-
 function dashboard(id, fData) {
 
     function histogram(fd){
@@ -111,21 +88,29 @@ function updateDashboard(id, fData) {
         .attr("text-anchor", "middle");
 }
 
-var sF = platformFreqData.map(function(d) {return [d.platform, d.freq];});
-dashboard('#dashboard', sF);
+d3.json('/api/histogram?variable=id', function(err, res) {
+    sF = res.map(function(d) {return [d.id, d.freq]});
+    dashboard('#dashboard', sF);
+});
 
 // event listeners
 $('#graph-id').click(function() {
-    var sF = idFreqData.map(function(d) {return [d.id, d.freq];});
-    updateDashboard('#dashboard', sF);
+    d3.json('/api/histogram?variable=id', function(err, res) {
+        sF = res.map(function(d) {return [d.id, d.freq]});
+        updateDashboard('#dashboard', sF);
+    });
 });
 
 $('#graph-platform').click(function() {
-    var sF = platformFreqData.map(function(d) {return [d.platform, d.freq];});
-    updateDashboard('#dashboard', sF);
+    d3.json('/api/histogram?variable=platform', function(err, res) {
+        sF = res.map(function(d) {return [d.platform, d.freq]});
+        updateDashboard('#dashboard', sF);
+    });
 });
 
 $('#graph-action').click(function() {
-    var sF = actionFreqData.map(function(d) {return [d.action, d.freq];});
-    updateDashboard('#dashboard', sF);
+    d3.json('/api/histogram?variable=action', function(err, res) {
+        sF = res.map(function(d) {return [d.action, d.freq]});
+        updateDashboard('#dashboard', sF);
+    });
 });
