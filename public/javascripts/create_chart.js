@@ -2,6 +2,7 @@
  * Builds the dashboard. Currently only the histogram
  * @param id - id of html element to attach to
  * @param fData - data to build dashboard from
+ * @param varName - name of variable of groupby
  */
 function dashboard(id, fData, varName) {
 
@@ -60,6 +61,7 @@ function dashboard(id, fData, varName) {
  * Updates the data in the histogram after an event.
  * @param id - id of html element to attach to
  * @param fData - data to build dashboard from
+ * @param varName - name of variable of groupby
  */
 function updateHistogram(id, fData, varName) {
     var hgDim={t: 60, b: 30, l: 0, r: 0};
@@ -108,41 +110,42 @@ function updateHistogram(id, fData, varName) {
 }
 
 // Builds initial dashboard on page load
-d3.json('/api/histogram?variable=id', function(err, res) {
-    fData = res.map(function(d) {return [d.id, d.freq]});
-    dashboard('#dashboard', fData, 'ID');
-});
-
+var groupbyVar = d3.select('#histogram-variable').text();
+histogramData = JSON.parse(d3.select('#histogram-data').text());
+if(groupbyVar === 'ID' || groupbyVar === '') {
+    fData = histogramData.map(function(d) {return [d.id, d.freq]});
+    groupbyVar = 'ID';
+} else if(groupbyVar === 'Platform') {
+    fData = histogramData.map(function(d) {return [d.platform, d.freq]});
+} else { // groupbyVar === 'Action'
+    fData = histogramData.map(function(d) {return [d.action, d.freq]});
+}
+dashboard('#dashboard', fData, groupbyVar);
 
 /**
  * Event listeners
  */
 
-// Histogram button event listeners
-$('#graph-id').click(function() {
-    d3.json('/api/histogram?variable=id', function(err, res) {
-        fData = res.map(function(d) {return [d.id, d.freq]});
-        updateHistogram('#dashboard', fData, 'ID');
-    });
-});
-
-$('#graph-platform').click(function() {
-    d3.json('/api/histogram?variable=platform', function(err, res) {
-        fData = res.map(function(d) {return [d.platform, d.freq]});
-        updateHistogram('#dashboard', fData, 'Platform');
-    });
-});
-
-$('#graph-action').click(function() {
-    d3.json('/api/histogram?variable=action', function(err, res) {
-        fData = res.map(function(d) {return [d.action, d.freq]});
-        updateHistogram('#dashboard', fData, 'Action');
-    });
-});
-
-// datapicker event listener
+// datapicker
 $('.input-daterange').datepicker({
     format: 'yyyy-mm-dd',
     startDate: '2017-01-01',
-    endDate: '2019-12-31'
+    endDate: '2019-12-31',
+    autoclose: true
+});
+
+// checkbox
+$('#datecheckbox').click(function() {
+    if(this.checked) {
+        $('#datepicker-start').val('');
+        $('#datepicker-end').val('');
+    }
+});
+
+$('#datepicker-start').on('changeDate', function(){
+    $('#datecheckbox').prop('checked', false);
+});
+
+$('#datepicker-end').on('input', function(){
+    $('#datecheckbox').prop('checked', false);
 });

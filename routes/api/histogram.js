@@ -11,8 +11,8 @@ router.get('/', function(req, res, next) {
     var apiString = '';
 
     if(req.query.start !== undefined && req.query.end !== undefined) {
-        apiString = 'SELECT ' + req.query.variable + ', count(*) AS freq FROM activity GROUP BY ' + req.query.variable +
-            'WHERE datetime BETWEEN DATE(' + req.query.start + ') AND DATE(' + req.query.end + ')';
+        apiString = 'SELECT ' + groupbyVar + ', count(*) AS freq FROM activity' +
+            ' WHERE date BETWEEN \'' + req.query.start + '\' AND \'' + req.query.end + '\' GROUP BY ' + groupbyVar;
     } else {
         apiString = 'SELECT ' + req.query.variable + ', count(*) AS freq FROM activity GROUP BY ' + req.query.variable;
     }

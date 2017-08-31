@@ -29,31 +29,32 @@
 
     <div id="dashboard"></div>
 
-    <p>Group by variable:</p>
-    <div class="btn-group" role="group" aria-label="...">
-      <button id="graph-id" type="button" class="btn btn-primary">ID</button>
-      <button id="graph-platform" type="button" class="btn btn-primary">Platform</button>
-      <button id="graph-action" type="button" class="btn btn-primary">Action</button>
-    </div>
-
-    <form>
-      <div class="form-group">
-        <label for="groupby-var">Group by: </label>
-        <select class="form-control" id="groupby-var">
-          <option>ID</option>
-          <option>Platform</option>
-          <option>Action</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <div class="input-daterange input-group" id="datepicker">
-          <input type="text" class="input-sm form-control" name="start">
-          <div class="input-group-addon">to</div>
-          <input type="text" class="input-sm form-control" name="end">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <form id="histogram-form" style="text-align:left;">
+        <div class="form-group">
+          <label for="groupby-var">Group by: </label>
+          <select class="form-control" id="groupby-var", name="variable">
+            <option>ID</option>
+            <option>Platform</option>
+            <option>Action</option>
+          </select>
         </div>
-      </div>
-      <button type="submit" class="btn btn-default">Submit</button>
-    </form>
+        <div class="form-group">
+          <label for="datepicker">Date Range:</label>
+          <div class="input-daterange input-group" id="datepicker">
+            <input type="text" class="input-sm form-control" id="datepicker-start" name="start">
+            <div class="input-group-addon">to</div>
+            <input type="text" class="input-sm form-control" id="datepicker-end" name="end">
+          </div>
+        </div>
+        <div class="form-group">
+          <label><input type="checkbox" id="datecheckbox" name="alltime"> No date limit?</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    <div class="col-md-3"></div>
   </div>
 </div><!-- /.container -->
 
@@ -62,6 +63,8 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="javascripts/bootstrap.js"></script>
 <script src="javascripts/bootstrap-datepicker.js"></script>
+<script id="histogram-variable"><%- groupbyVar %></script>
+<script type="application/json" id="histogram-data"><%- JSON.stringify(histogramJson) %></script>
 <script src="javascripts/create_chart.js"></script>
 </body>
 </html>
